@@ -8,10 +8,13 @@ import { errorHandler } from './utils/errors.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const rawFrontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+const frontendUrl = rawFrontendUrl.endsWith('/') ? rawFrontendUrl.slice(0, -1) : rawFrontendUrl;
+
 // Enable CORS with credentials for HttpOnly cookie support
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: frontendUrl,
     credentials: true,
   })
 );
