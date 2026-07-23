@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: tms_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 2006ramidu
+      POSTGRES_DB: tms_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: tms_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: postgresql://postgres:2006ramidu@db:5432/tms_db?schema=public
+      JWT_SECRET: super_secret_jwt_access_token_key_2026
+      JWT_REFRESH_SECRET: super_secret_jwt_refresh_token_key_2026
+      PORT: 5000
+      NODE_ENV: development
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    container_name: tms_frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

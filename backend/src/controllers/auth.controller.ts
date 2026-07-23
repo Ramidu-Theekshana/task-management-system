@@ -103,7 +103,7 @@ export const refresh = async (req: Request, res: Response, next: NextFunction): 
 
     // 2. Fallback to request body
     if (!token) {
-      token = req.body.refreshToken;
+      token = req.body?.refreshToken;
     }
 
     if (!token) {
@@ -174,7 +174,7 @@ export const logout = async (req: Request, res: Response, next: NextFunction): P
 
     // Fallback to body
     if (!token) {
-      token = req.body.refreshToken;
+      token = req.body?.refreshToken;
     }
 
     if (token) {
