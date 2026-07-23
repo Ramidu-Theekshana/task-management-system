@@ -65,7 +65,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       (response) => response,
       async (error: AxiosError) => {
         const originalRequest = error.config;
-        if (error.response?.status === 401 && originalRequest && !(originalRequest as any)._retry) {
+        if (
+          error.response?.status === 401 &&
+          originalRequest &&
+          !originalRequest.url?.includes('/auth/refresh') &&
+          !(originalRequest as any)._retry
+        ) {
           (originalRequest as any)._retry = true;
           try {
             await api.post('/auth/refresh');
