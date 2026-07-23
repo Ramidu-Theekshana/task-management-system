@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth.routes.js';
+import taskRoutes from './routes/task.routes.js';
 import { errorHandler } from './utils/errors.js';
 
 const app = express();
@@ -19,6 +20,9 @@ app.use(express.json());
 
 // Auth Routes
 app.use('/api/auth', authRoutes);
+
+// Task Routes
+app.use('/api/tasks', taskRoutes);
 
 // Global Error Handler
 app.use(errorHandler);
