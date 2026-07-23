@@ -21,22 +21,31 @@ const setTokenCookies = (res: Response, accessToken: string, refreshToken: strin
   res.cookie('access_token', accessToken, {
     httpOnly: true,
     secure: isProd,
-    sameSite: 'lax',
+    sameSite: isProd ? 'none' : 'lax',
     maxAge: 15 * 60 * 1000, // 15 minutes
   });
 
   res.cookie('refresh_token', refreshToken, {
     httpOnly: true,
     secure: isProd,
-    sameSite: 'lax',
+    sameSite: isProd ? 'none' : 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 };
 
 // Helper to clear cookies
 const clearTokenCookies = (res: Response) => {
-  res.clearCookie('access_token');
-  res.clearCookie('refresh_token');
+  const isProd = process.env.NODE_ENV === 'production';
+  res.clearCookie('access_token', {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
+  });
+  res.clearCookie('refresh_token', {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
+  });
 };
 
 export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
