@@ -50,9 +50,9 @@ Copy the `.env.example` in the root directory to your respective environments, o
 
 ### Backend (`backend/.env`)
 ```env
-DATABASE_URL="postgresql://postgres:2006ramidu@localhost:5432/tms_db?schema=public"
-JWT_SECRET="super_secret_jwt_access_token_key_2026"
-JWT_REFRESH_SECRET="super_secret_jwt_refresh_token_key_2026"
+DATABASE_URL="postgresql://username:password@localhost:5432/database_name?schema=public"
+JWT_SECRET="your_jwt_access_token_secret_key"
+JWT_REFRESH_SECRET="your_jwt_refresh_token_secret_key"
 PORT=5000
 ```
 
@@ -179,3 +179,46 @@ npm run test
 
 1.  **Registration Page**: Per design requirements, no registration interface has been built. The default user is seeded in the database.
 2.  **Prisma 7 Drivers**: Prisma 7 relies on client driver adapters (`@prisma/adapter-pg` and `pg`) rather than the native Rust query engine. If you compile the app, ensure Node dependencies are installed.
+
+---
+
+## Deployment Guide
+
+### Deploying Backend on Render
+
+1.  **Create a PostgreSQL Database**:
+    *   Navigate to Render and create a new **PostgreSQL** database service.
+    *   Copy the **Internal Database URL** (or External URL) from the database dashboard.
+2.  **Create a Web Service for Backend**:
+    *   Create a new **Web Service** on Render and connect it to your GitHub repository.
+    *   Set the **Root Directory** to `backend`.
+    *   Choose **Node** as the runtime.
+    *   Set the **Build Command** to:
+        ```bash
+        npm install --legacy-peer-deps && npx prisma generate
+        ```
+    *   Set the **Start Command** to:
+        ```bash
+        npm run start
+        ```
+    *   Add the following **Environment Variables**:
+        *   `DATABASE_URL`: Your Render PostgreSQL database URL.
+        *   `JWT_SECRET`: A secure random secret key (e.g. `your-production-secret-key-1`).
+        *   `JWT_REFRESH_SECRET`: Another secure random secret key (e.g. `your-production-secret-key-2`).
+        *   `PORT`: `5000` (Render will automatically detect this port or bind to custom).
+        *   `FRONTEND_URL`: Your Vercel frontend URL (without trailing slash, e.g. `https://your-app.vercel.app`).
+        *   `NODE_ENV`: `production`
+
+### Deploying Frontend on Vercel
+
+1.  **Configure Frontend Repo**:
+    *   Ensure the [frontend/vercel.json](file:///e:/SE/My-career/Career-projects/Koncepthive/task-management-system/frontend/vercel.json) file is committed. This guarantees that page refreshes on `/login` or `/` do not return 404s.
+2.  **Create a Vercel Project**:
+    *   Import your GitHub repository into Vercel.
+    *   Choose **Vite** as the framework preset.
+    *   Set the **Root Directory** to `frontend`.
+    *   Add the following **Environment Variables**:
+        *   `VITE_API_URL`: Your backend API endpoint URL (e.g. `https://your-backend.onrender.com/api`).
+3.  **Build and Deploy**:
+    *   Vercel will build the frontend automatically and deploy it.
+
