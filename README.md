@@ -119,7 +119,7 @@ docker-compose up --build
 ```
 *   The **Frontend Web Client** is mapped to `http://localhost:3000`.
 *   The **Backend Server API** is mapped to `http://localhost:5000`.
-*   The **PostgreSQL Database** is exposed on `http://localhost:5432` with username `postgres`, password `2006ramidu`, and database name `tms_db`.
+*   The **PostgreSQL Database** is exposed on `http://localhost:5432` with username `postgres`, password `your_password`, and database name `tms_db`.
 
 To stop the containers:
 ```bash
